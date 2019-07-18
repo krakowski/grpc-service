@@ -1,0 +1,46 @@
+plugins {
+    id "com.gradle.plugin-publish" version "0.10.1"
+    id "java-gradle-plugin"
+    id 'groovy'
+}
+
+group = 'io.github.krakowski'
+version = '0.1.0'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'com.google.protobuf:protobuf-gradle-plugin:0.8.10'
+    implementation 'org.ajoberstar.grgit:grgit-core:3.1.1'
+}
+
+gradlePlugin {
+    plugins {
+        grpcServicePlugin {
+            id = 'io.github.krakowski.protodep'
+            implementationClass = 'io.github.krakowski.protodep.ProtoDep'
+        }
+    }
+}
+
+pluginBundle {
+    website = 'https://github.com/krakowski/protodep'
+    vcsUrl = 'https://github.com/krakowski/protodep.git'
+    description = 'Pulls protobuf service definitions from a specified git repository and compiles them'
+    tags = ['protobuf', 'dependency', 'management']
+
+    plugins {
+        grpcServicePlugin {
+            displayName = 'Protobuf Dependency Management Plugin'
+        }
+    }
+}
+
+wrapper {
+    gradleVersion = "5.5"
+}
