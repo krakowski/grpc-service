@@ -13,6 +13,7 @@ class ProtoDep implements Plugin<Project> {
 
     private static final String PROTO_VERSION = '3.9.0'
     private static final String GRPC_VERSION = '1.22.1'
+    private static final String REACTOR_GRPC_VERSION = '0.10.0'
     private static final String CLONE_DIR = 'cloned-protos'
 
     void apply(Project project) {
@@ -44,10 +45,14 @@ class ProtoDep implements Plugin<Project> {
                 grpc {
                     artifact = "io.grpc:protoc-gen-grpc-java:${GRPC_VERSION}"
                 }
+                reactor {
+                    artifact = "com.salesforce.servicelibs:reactor-grpc:${REACTOR_GRPC_VERSION}:jdk8@jar"
+                }
             }
             generateProtoTasks {
                 all()*.plugins {
                     grpc {}
+                    reactor {}
                 }
             }
         }
@@ -56,6 +61,7 @@ class ProtoDep implements Plugin<Project> {
             project.tasks.findByName('generateProto').dependsOn('cloneProto')
 
             project.dependencies {
+                implementation "com.salesforce.servicelibs:reactor-grpc-stub:${REACTOR_GRPC_VERSION}"
                 implementation "com.google.protobuf:protobuf-java:${PROTO_VERSION}"
                 implementation "io.grpc:grpc-netty-shaded:${GRPC_VERSION}"
                 implementation "io.grpc:grpc-protobuf:${GRPC_VERSION}"
